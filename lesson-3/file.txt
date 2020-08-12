@@ -1,0 +1,50 @@
+-- таблицы с медиафайлами музыка и видео
+drop table if exists music;
+create table music(
+	id serial primary key,
+	artist_id bigint unsigned not null,
+	album_id bigint unsigned not null,
+	track_id bigint unsigned not null
+);
+
+drop table if exists video;
+create table video(
+	id serial primary key,
+	video_name varchar(255),
+	video_description text
+);
+
+-- таблица с лайками медиафайлов
+drop table if exists likes_media;
+create table likes_media(
+	user_id bigint unsigned not null,
+	music_id bigint unsigned not null,
+	video_id bigint unsigned not null,
+	photos_id bigint unsigned not null,
+	liked_at datetime default current_timestamp,
+	primary key(user_id, music_id, video_id, photos_id),
+	foreign key(user_id) references profiles(user_id),
+	foreign key(music_id) references music(id),
+	foreign key(video_id) references video(id),
+	foreign key(photos_id) references photos(id)
+);
+
+-- таблица с лайками постов
+drop table if exists likes_posts;
+create table likes_posts(
+	user_id bigint unsigned not null,
+	posts_id bigint unsigned not null,
+	liked_at datetime default current_timestamp,
+	foreign key(user_id) references profiles(user_id),
+	foreign key(posts_id) references posts(id)
+);
+
+-- таблица с лайками пользователей
+drop table if exists likes_users;
+create table likes_users(
+	user_id bigint unsigned not null,
+	liked_by bigint unsigned not null unique,
+	liked_at datetime default current_timestamp,
+	foreign key(user_id) references profiles(user_id),
+	foreign key(liked_by) references profiles(user_id)
+);
